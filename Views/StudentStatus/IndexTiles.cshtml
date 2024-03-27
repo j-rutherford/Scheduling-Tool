@@ -1,0 +1,40 @@
+﻿@model IEnumerable<SAT.DATA.EF.StudentStatus>
+
+@{
+    ViewBag.Title = "Student Statuses (Tile View)";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <p class="pull-left">
+        @Html.ActionLink("Add Status", "Create", null, new { @class = "btn btn-primary" })
+    </p>
+    <!-- add a link for the table view -->
+    <p class="pull-right">@Html.ActionLink("Table View", "Index")</p>
+    <div class="clearfix"></div>
+</div>
+@foreach (var item in Model)
+{
+    <div class="statusContainerTile">
+        <div class="statusHeaderTile">
+            <h2>@Html.DisplayFor(modelItem => item.SSName)</h2>
+        </div>
+        <div class="statusContentTile">
+            @Html.DisplayFor(modelItem => item.SSDescription)
+        </div>
+        <div class="statusFooterTile">
+            @Html.ActionLink("Edit", "Edit", new { id = item.SSID }) |
+            <!-- //! added later -->
+            <!-- prevent a student status from being deleted if there are students using that status -->
+            @if (item.Students.Count < 1)
+            {
+                @Html.ActionLink("Delete", "Delete", new { id = item.SSID })
+            }
+            else
+            {
+                <span class="myWarning" style="color:lightgray;">In Use</span>
+            }
+        </div>
+    </div>
+}

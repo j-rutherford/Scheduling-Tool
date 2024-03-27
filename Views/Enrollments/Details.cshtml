@@ -1,0 +1,55 @@
+﻿@model SAT.DATA.EF.Enrollment
+
+@{
+    //update the title
+    ViewBag.Title = "Enrollment Details";
+}
+
+<div id="studentContainer">
+    <div id="studentHeader">
+        @* display the start date, end date, course name and location (room number) in the header
+            use navigation properties to access related info (fields in foreign tables) *@
+        <h2>
+            @*@string.Format($"{Model.ScheduledClasses.StartDate:d} - {Model.ScheduledClasses.EndDate:d}") //! string interpolation C# 6 or greater *@
+            @string.Format("{0:d} - {1:d}", Model.ScheduledClasses.StartDate, Model.ScheduledClasses.EndDate)
+            <br />@Model.ScheduledClasses.Courses.CourseName - @Model.ScheduledClasses.Location
+        </h2>
+        <hr />@* added to separate header from the student/scheduled class details *@
+    </div>
+    @* details of the enrollment *@
+    <!-- student info -->
+    <div id="studentLeft" class="text-center">
+        <h3 style="color:#023253;margin-top:0;">Student Information</h3>
+        <img src="~/Content/images/StudentImages/@Model.Students.PhotoUrl" />
+        <p>@Model.Students.FullName</p>
+        <p><strong>Status: </strong> @Model.Students.StudentStatus.SSName</p>
+        <!-- can use model properties or extension methods to display info -->
+        <p><strong>Major: </strong> @Model.Students.Major</p>
+        @*<p><strong>Major: </strong> @Html.DisplayFor(x => x.Students.Major)</p>*@
+        <p><strong>Email: </strong> @Html.DisplayFor(x => x.Students.Email)</p>
+    </div>
+    <!-- scheduled class info -->
+    <div id="studentRight" style="border-left:solid 2px #E15D05;padding-left:.5em;">
+        <h3 class="text-center" style="color:#023253;margin-top:0;">Scheduled Class Information</h3>
+        <p><strong>Class:</strong> @Model.ScheduledClasses.Courses.CourseName</p>
+        <p><strong>Credits: </strong> @Model.ScheduledClasses.Courses.CreditHours</p>
+        <p><strong>Curriculum: </strong> @Html.DisplayFor(x => x.Students.Major)</p>
+        <p>
+            <strong>Class Description: </strong><br />
+            @Html.DisplayFor(x => x.ScheduledClasses.Courses.CourseDescription)
+        </p>
+    </div>
+
+    <!-- clear the prev content float -->
+    <div class="clear"></div>
+    <div id="studentFooterLeft">
+        @Html.ActionLink("Back to Enrollments", "Index")
+    </div>
+    <div id="studentFooterRight">
+        @Html.ActionLink("Edit", "Edit",
+       new { id = Model.EnrollmentId }, new { @class = "btn btn-primary" })
+    </div>
+
+    <!-- clear the prev content float -->
+    <div class="clear"></div>
+</div>

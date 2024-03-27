@@ -1,0 +1,266 @@
+﻿@model SAT.DATA.EF.Student
+
+@{
+    //update the title
+    ViewBag.Title = "Add New Student";
+}
+
+@*  reuse the ViewBag for your page header *@
+<h2>@ViewBag.Title</h2>
+
+@*
+    all info regarding bootstrap formatting has been removed and has
+    been replaced with custom code to present the Create in the same way
+    as the Details view.
+    some classes may still exist on form controls for formatting.
+
+    ***** DO NOT REMOVE the AntiForgeryToken() *****
+*@
+
+<!-- File Upload Steps
+    1) update the BeginForm()
+    2) add an input type of file to the form (below)
+    3) code the POST action (Controller)
+    BeginForm() values: action, Controller, HttpRequest (Get/Post) -->
+@using (Html.BeginForm("Create", "Students", FormMethod.Post,
+    @*define the encoding type allows for the form data AND the file to be sent*@
+    new { @enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="studentContainer">
+        <div id="studentHeader">
+            <h2>
+                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" }):
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" }):
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </h2>
+        </div>
+        <div id="studentLeft">
+            @* display some default photo (Create/Edit/Details will all look similar) *@
+            <p>
+                <strong>Existing Photo:</strong><br />
+                <img src="~/Content/images/StudentImages/yourPhotoHere.png" alt="No Photo" />
+            </p>
+            <br /><br />
+            <strong>New Photo:</strong><input type="file" name="studentPhoto" />@* file upload, name must match action param (Controller) *@
+            <p>
+                <strong>
+                    @Html.LabelFor(model => model.Major, htmlAttributes: new { @class = "control-label" }):
+                </strong>
+                @Html.EditorFor(model => model.Major, new { htmlAttributes = new { @class = "form-control", @style = "max-width:75%;" } })
+                @Html.ValidationMessageFor(model => model.Major, "", new { @class = "text-danger" })
+            </p>
+            <!-- override default style -->
+            <p style="margin-top:.5em;">
+                <!-- manually update label text (string) -->
+                <strong>
+                    @Html.LabelFor(model => model.SSID, "Status" //update label (string) text
+               , htmlAttributes: new { @class = "control-label" }):
+                </strong>
+                @Html.DropDownList("SSID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SSID, "", new { @class = "text-danger" })
+            </p>
+        </div>
+        <div id="studentRight">
+            <fieldset>
+                <legend>Address Information</legend>
+                <p>
+                    <!-- use placeholders where appropriate -->
+                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @placeholder = "Address" } })
+                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                </p>
+
+                <p>
+                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", @placeholder = "City" } })
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                </p>
+
+                <p>
+                    <!-- override style (if necessary) -->
+                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "ST", @style = "width:50px;" } })
+                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                </p>
+
+                <p>
+                    @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control", @placeholder = "Zip Code" } })
+                    @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+                </p>
+            </fieldset>
+
+            <fieldset class="second">
+                <legend>Other Contact</legend>
+                <p>
+                    @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number" } })
+                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                </p>
+                <p>
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Address" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </p>
+            </fieldset>
+        </div>
+
+        <div class="clear"></div>
+
+        <div id="studentFooterLeft">
+            @* change values on buttons and hyperlinks to personalize *@
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+        </div>
+        <div id="studentFooterRight">
+            @* change values on buttons and hyperlinks to personalize *@
+            <input type="submit" value="Add Student" class="btn btn-success" />
+        </div>
+
+        <div class="clear"></div>
+    </div>
+}
+
+@* remember to include a section Scripts for validation *@
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+@{
+    //reference only
+    #region original form elements (default groups)
+    /*
+        @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.Major, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.Major, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Major, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.ZipCode, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ZipCode, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.PhotoUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.EditorFor(model => model.PhotoUrl, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PhotoUrl, "", new { @class = "text-danger" })
+
+                @Html.LabelFor(model => model.SSID, "SSID", htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.DropDownList("SSID", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SSID, "", new { @class = "text-danger" })
+
+        @Html.ActionLink("Back to List", "Index")
+        */
+    #endregion
+
+    #region default bootstrap
+    /*
+     <div class="form-horizontal">
+        <h4>Student</h4>
+        <hr />
+        @* validation summary *@
+
+            @* first name *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* last name *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* major *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* address *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* city *@
+
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* state *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* zip code *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* phone *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* email *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* photo url *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* ssid (student status id) *@
+        <div class="form-group">
+            <div class="col-md-10">
+            </div>
+        </div>
+
+                @* submit *@
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    */
+
+    #endregion
+}

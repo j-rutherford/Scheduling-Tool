@@ -1,0 +1,70 @@
+﻿@model SAT.UI.MVC.Models.ContactViewModel
+@* (strongly) typed view - tied to a model *@
+
+@{
+    //update the page title
+    ViewBag.Title = "Contact Us";
+}
+
+@* reuse the ViewBag for the page header *@
+<h2>@ViewBag.Title</h2>
+
+@* //! added after Contact POST (Controller) *@
+@* display error message if the email failed to send *@
+@if (ViewBag.MailFail != null)
+{
+    //email failed to send
+    <h2 class="myWarning">@ViewBag.MailFail</h2>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div id="mailForm">
+        @* CustomStyles.css line 82 *@
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <!-- name -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- email -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- message -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Message, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    @* customize input and button text *@
+                    <input type="submit" value="Send Mail" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- add the script reference for validation (otherwise the form will ALWAYS submit) -->
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+@* //! process the form in the Controller *@

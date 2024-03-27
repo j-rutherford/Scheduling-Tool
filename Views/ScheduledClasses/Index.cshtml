@@ -1,0 +1,74 @@
+﻿@model IEnumerable<SAT.DATA.EF.ScheduledClass>
+
+@{
+    ViewBag.Title = "Scheduled Classes";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@* Admin and Scheduling can schedule classes *@
+@if (User.IsInRole("Scheduling") || User.IsInRole("Admin"))
+{
+    <p class="pull-left">
+        @Html.ActionLink("Schedule a Class", "Create", "", new { @class = "btn btn-success" })
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th style="width: 20%;">
+            @Html.DisplayNameFor(model => model.StartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Courses.CourseName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Location)
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.ScheduledClassStatus.SCSName)*@
+            Status
+        </th>
+        @* only Admin can change the status of a scheduled class (soft-delete) *@
+        @if (User.IsInRole("Admin"))
+        {
+            <!-- //! added to quickly change the status of a scheduled class -->
+            <th>Change Class Status</th>
+        }
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <!-- scheduled class name link to details (clean-up view) -->
+            <td>
+                @Html.ActionLink(item.Courses.CourseName, "Details", new { id = item.ScheduledClassId })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ScheduledClassStatuses.SCSName)
+            </td>
+            @* only Admin can change the status of a scheduled class (soft-delete) *@
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    @* onclick was added to prompt the user for the status change (still send the user to Delete) *@
+                    @Html.ActionLink("Active", "Delete", new { id = item.ScheduledClassId, @status = 1 },
+                   new { onclick = "return confirm('Are you sure you want to change the status of this scheduled class?')"}) |
+                    @Html.ActionLink("Pending", "Delete", new { id = item.ScheduledClassId, @status = 2 },
+                   new { onclick = "return confirm('Are you sure you want to change the status of this scheduled class?')" }) |
+                    @Html.ActionLink("Completed", "Delete", new { id = item.ScheduledClassId, @status = 3 },
+                   new { onclick = "return confirm('Are you sure you want to change the status of this scheduled class?')" }) |
+                    @Html.ActionLink("Cancelled", "Delete", new { id = item.ScheduledClassId, @status = 4 },
+                   new { onclick = "return confirm('Are you sure you want to change the status of this scheduled class?')" })
+                </td>
+            }
+        </tr>
+    }
+
+</table>

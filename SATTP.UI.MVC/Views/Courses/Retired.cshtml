@@ -1,0 +1,73 @@
+﻿@model IEnumerable<SATTP.DATA.EF.Models.Course>
+
+@{
+    //update the ViewBag.Title property
+    ViewBag.Title = "Retired Courses";
+
+    //! session
+    //use Session to store this as a "source page" for other actions to use (instead of
+    //back to list, redirect, etc)
+    // Session["course"] = "retired";
+}
+
+<!-- reuse the title as the page header -->
+<h2>@ViewBag.Title</h2>
+
+<p class="pull-left">
+    @* customize any link or button text *@
+    @Html.ActionLink("Add New Course", "Create", null,null, new { @class = "btn btn-success" })
+</p>
+
+<!-- link for active courses -->
+<p class="pull-right">
+    @Html.ActionLink("View Active Courses", "Active", null,null, new { @class = "btn btn-primary" })
+</p>
+
+<!-- remove any unnecessary course info (move to details)-->
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.CourseName)</th>
+        <th class="text-center">
+            @Html.DisplayNameFor(model => model.CreditHours)
+        </th>
+        <th>
+            <!-- change display text -->
+            @*@Html.DisplayNameFor(model => model.IsActive)*@
+            Status
+        </th>
+        @* only Admin can edit/delete *@
+        @if (User.IsInRole("Admin"))
+        {
+            <th></th>
+        }
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <!-- use the details link clean up the buttons for display -->
+                @Html.ActionLink(item.CourseName, "Details", new { id = item.CourseId })
+
+                @*@Html.DisplayFor(modelItem => item.Name)*@
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.CreditHours)
+            </td>
+            <td>
+                <!-- toggle text based on IsActive (active/retired) -->
+                @(item.IsActive ? "Active" : "Retired")
+                @*@Html.DisplayFor(modelItem => item.IsActive)*@
+            </td>
+            @* only Admin can edit/delete *@
+            @if (User.IsInRole("Admin"))
+            {
+                <td class="text-right">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.CourseId }) |
+                    <!-- allow retired courses to be "activated" -->
+                    @Html.ActionLink("Activate", "Toggle", new { id = item.CourseId })
+                </td>
+            }
+        </tr>
+    }
+</table>

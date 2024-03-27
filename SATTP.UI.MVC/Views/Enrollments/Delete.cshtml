@@ -1,0 +1,47 @@
+﻿@model SATTP.DATA.EF.Models.Enrollment
+
+@{
+    //update the title
+    ViewBag.Title = "Delete Enrollment";
+}
+
+@* structure the form *@
+<div id="formOutline">
+    <div id="studentHeader" class="text-center">
+        <h1 class="text-danger" style="font-size: 30px; margin-bottom: .5em;">*** WARNING ***</h1>
+        <h2 class="emphasis">-- Read before proceeding --</h2>
+        <h3 class="text-center">
+            The following enrollment will be removed <span class="emphasis">@Model.Student.FullName's</span> schedule:
+            <br />
+        </h3>
+
+        <ul>
+            <li class="text-center text-danger" style="list-style-type: none; font-weight: 700; font-size: 18px;">@Model.ScheduledClass.ClassInfo</li>
+        </ul>
+
+        <h3>This action <span class="text-danger" style="font-size: 18px;">cannot</span> be undone. <br /><br /><span class="emphasis">Proceed?</span></h3>
+    </div>
+
+    @* only Admin and Scheduling can delete enrollments *@
+    @if (User.IsInRole("Admin") || User.IsInRole("Scheduling"))
+    {
+        using (Html.BeginForm())
+        {
+            <div class="form-horizontal">
+                @Html.AntiForgeryToken()
+
+                <div class="clear"></div>
+
+                <div id="studentFooterLeft">
+                    @Html.ActionLink("Cancel", "Index", "", new { @class = "btn btn-primary" })
+                </div>
+                <div id="studentFooterRight">
+                    <input type="submit" value="Yes, Remove Enrollment" class="btn btn-danger" />
+                </div>
+
+                <div class="clear"></div>
+
+            </div>
+        }
+    }
+</div>

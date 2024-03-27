@@ -1,0 +1,132 @@
+﻿@model IEnumerable<SATTP.DATA.EF.Models.Student>
+
+@{
+    ViewBag.Title = "Students";
+}
+@section css {
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+
+@if (ViewBag.Warning != null)
+{
+    <div class="alert alert-danger"><p>@ViewBag.Warning</p></div>
+}
+
+<!-- reuse the ViewBag.Title for the page header -->
+<h2>@ViewBag.Title</h2>
+<!-- only Admin can add a new Student -->
+@if (User.IsInRole("Admin"))
+{
+    <p class="pull-left">
+        @Html.ActionLink("Add New Student", "Create",null,null, new { @class = "btn btn-success" })
+    </p>
+}
+
+@* clean up the table display --add DataTables.net *@
+<!-- add id="studentsTable" to reference table -->
+<table class="table" id="studentsTable">
+    <!-- add <thead> to use DataTables.net -->
+    <thead>
+        <tr>
+            @* combine first name and last name into a single value that
+            we can use throughout the app
+            * used for drop-down lists (Enrollments) *@
+            @*<th>
+            @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.LastName)
+            </th>*@
+            <th>
+                <!-- updated to use custom property (StudentMetadata) -->
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Major)
+            </th>
+            @*<th>
+            @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.State)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.ZipCode)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.Phone)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            @*<th>
+            @Html.DisplayNameFor(model => model.PhotoUrl)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.StudentStatus.SSName)
+            </th>
+            @if (User.IsInRole("Admin"))
+            {
+                <!-- only display for Admin (Edit/Delete) -->
+                <th></th>
+            }
+        </tr>
+    </thead>
+
+    <!-- add <tbody> to use DataTables.net -->
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.ActionLink(item.FullName, "Details", new { id = item.StudentId })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Major)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentStatus.SSName)
+                </td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.StudentId }) |
+                        @if (item.Enrollments.Any())
+                        {
+                            <span class="myWarning">In Use</span>
+                        }
+                        else
+                        {
+                            var text = item.SSID switch
+                            {
+                                2 => "Withdraw",
+                                3 => "Re-enroll",
+                                _ => "Edit Status"
+                            };
+                            <a asp-action="Toggle" asp-route-id="@item.StudentId">@text</a>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#studentsTable').DataTable();
+        });
+    </script>
+}

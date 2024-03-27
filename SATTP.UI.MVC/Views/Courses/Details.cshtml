@@ -1,0 +1,76 @@
+﻿@model SATTP.DATA.EF.Models.Course
+
+@{
+    ViewBag.Title = "Course Details";
+    string prev = ViewBag.Previous;
+}
+
+<!-- reuse the title as the page header -->
+<h2>@ViewBag.Title</h2>
+
+@* reuse student styles for course details *@
+<div id="studentContainer">
+    <div id="studentHeader">
+        <h2>@Html.DisplayFor(model => model.CourseName)</h2>
+    </div>
+    <div id="studentLeft">
+        <!-- credit hours -->
+        <p>
+            <strong>@Html.DisplayNameFor(model => model.CreditHours)</strong>
+            @Html.DisplayFor(model => model.CreditHours)
+        </p>
+
+        <!-- curriculum -->
+        <p>
+            <strong>
+                @Html.DisplayNameFor(model => model.Curriculum)
+            </strong>
+            @Html.DisplayFor(model => model.Curriculum)
+        </p>
+
+        <!-- status -->
+        <p>
+            <strong>Status:</strong> @(Model.IsActive ? "Active" : "Retired")
+        </p>
+
+        <!-- additional details (notes) -->
+        <p>
+            <strong>
+                @Html.DisplayNameFor(model => model.Notes):
+            </strong>
+            <br />
+            @Html.DisplayFor(model => model.Notes)
+        </p>
+    </div>
+
+    <div id="studentRight">
+        <!-- description -->
+        <p>
+            <strong>@Html.DisplayNameFor(model => model.CourseDescription):</strong>
+            <br />
+            @Html.DisplayFor(model => model.CourseDescription)
+        </p>
+    </div>
+
+    <!-- clear the prev content float -->
+    <div class="clear"></div>
+
+    <!-- container footer content -->
+    <div id="studentFooterLeft">
+        @* return to the active/retired course list (previous page) *@
+        @Html.ActionLink("Back to Courses",@prev,null,null,new{@class="btn btn-default"})
+    </div> 
+
+    @* only Admin can edit/delete *@
+    @if (User.IsInRole("Admin"))
+    {
+        <div id="studentFooterRight">
+            @Html.ActionLink("Edit", "Edit",
+           new { @id = Model.CourseId }, //! pass the CourseId to the edit (controller action)
+           new { @class = "btn btn-primary" })
+        </div>
+    }
+
+    <!-- clear the prev content float -->
+    <div class="clear"></div>
+</div>

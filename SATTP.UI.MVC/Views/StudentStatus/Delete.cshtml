@@ -1,0 +1,54 @@
+﻿@model SATTP.DATA.EF.Models.StudentStatus
+
+@{
+    //update the title
+    ViewBag.Title = "Delete ";
+    string prev = ViewBag.Previous ?? "Index";
+
+}
+
+<div id="formOutline">
+    <hr />
+    <div id="studentHeader">
+        <h2>Are you sure you want to delete <span class="emphasis"><i>"@Model.SSName"</i></span> from available statuses?</h2>
+    </div>
+    <hr />
+    <div class="text-center">
+        <h1 class="text-danger" style="font-size: 24px;">*** WARNING ***</h1>
+        <h3 class="emphasis">THIS ACTION CANNOT BE UNDONE</h3>
+    </div>
+
+    @* only Admin can delete *@
+    @if (User.IsInRole("Admin"))
+    {
+        using (Html.BeginForm())
+        {
+            <div class="form-horizontal">
+
+                @Html.AntiForgeryToken()
+                <div class="clear"></div>
+                <div id="studentFooterLeft">
+                    <a asp-action="@prev" class="btn btn-primary">Cancel</a>
+                </div>
+
+                <div id="studentFooterRight">
+                    <input type="submit" value="CONFIRM DELETE" class="btn btn-danger" />
+                </div>
+
+                @if (ViewBag.DeleteNotAllowed != null)
+                {
+                    //status is in use, do not allow delete
+                    <br />
+                    <h2 class="text-danger">@ViewBag.DeleteNotAllowed</h2>
+
+                    @* display the name of students currently in the status *@
+                    <h3 class="text-danger">Please remove the following students before proceeding: </h3>
+                    <h4>@ViewBag.StudentsInStatus</h4>
+                }
+
+                <!-- clear the prev content float -->
+                <div class="clear"></div>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,80 @@
+﻿@model SATTP.DATA.EF.Models.ScheduledClass
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div id="studentContainer">
+    <div id="studentHeader">
+        <h2>
+            @Html.DisplayFor(model => model.Course.CourseName),
+            @Html.DisplayFor(model => model.StartDate) -
+            @Html.DisplayFor(model => model.EndDate)
+        </h2>
+    </div>
+    <div>
+        <p>
+            <strong>@Html.DisplayNameFor(model => model.Location):</strong>
+            @Html.DisplayFor(model => model.Location)
+        </p>
+        <p>
+            <strong>@Html.DisplayNameFor(model => model.InstructorName):</strong>
+            @Html.DisplayFor(model => model.InstructorName)
+        </p>
+        <p>
+            <strong>Current Status:</strong>
+            @Html.DisplayFor(model => model.ScheduledClassStatus.SCSName)
+        </p>
+    </div>
+    @if (Model.Enrollments.Any())
+    {
+        <h3 class="text-center">Enrollments</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Open</td>
+                    <td>Name</td>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Scheduling"))
+                    {
+                        <td></td>
+                    }
+                </tr>
+
+            </thead>
+
+            @foreach (var item in Model.Enrollments)
+            {
+                <tbody>
+
+                    <tr>
+                        <td>
+                            <a asp-action="Details" asp-controller="Students" asp-route-id="@item.StudentId">
+                                <img src="~/images/select.png" width="25" alt="View More" />
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Student.FullName)
+                        </td>
+                        <td>
+                            <form asp-action="Disenroll" method="post">
+                                <input type="hidden" name="scid" value="@item.ScheduledClassID" />
+                                <input type="hidden" name="studentId" value="@item.StudentId" />
+                                <input type="submit" class="btn btn-sm btn-danger" value="Withdraw from Course">
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    }
+    <div id="studentFooterLeft">
+        <a asp-action="Index">Back to Scheduled Classes</a>
+    </div>
+    <!-- only scheduling and admin can edit -->
+    @if (User.IsInRole("Scheduling") || User.IsInRole("Admin"))
+    {
+        <div id="studentFooterRight">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.ScheduledClassID }, new {@class="btn btn-primary" })
+        </div>
+    }
+</div>

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<SATTP.DATA.EF.Models.ScheduledClass>
+
+@{
+    ViewBag.Title = "Scheduled Classes";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@* Admin and Scheduling can schedule classes *@
+@if (User.IsInRole("Scheduling") || User.IsInRole("Admin"))
+{
+    <p class="pull-left">
+        @Html.ActionLink("Schedule a Class", "Create", "ScheduledClasses",null, new { @class = "btn btn-success" })
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Course.CourseName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InstructorName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Location)
+        </th>
+        <th>
+            Status
+        </th>
+        @if (User.IsInRole("Admin"))
+        {
+            <th></th>
+        }
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <!-- scheduled class name link to details (clean-up view) -->
+            <td>
+                @Html.ActionLink(item.Course.CourseName, "Details", new { id = item.ScheduledClassID })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InstructorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            @* only Admin can change the status of a scheduled class (soft-delete) *@
+            @if (User.IsInRole("Admin"))
+            {
+                <form asp-action="ChangeStatus">
+                <td>
+                    <input type="hidden" asp-for="@item.ScheduledClassID" name="id" id="id">
+                    <select asp-for="@item.SCSID" name="scsid" id="scsid" asp-items="@ViewBag.Statuses" class="form-control"></select>
+                </td>
+                <td>
+                    <input onclick="return confirm('Are you sure you want to change the status of this scheduled class?')" type="submit" class="btn btn-outline-primary" value="Update">
+
+                </td>
+                </form>
+            }
+            else
+            {
+                @Html.DisplayFor(modelItem=>item.ScheduledClassStatus.SCSName)
+            }
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,88 @@
+﻿@model SAT.DATA.EF.Course
+
+@{
+    ViewBag.Title = "Add new Course";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div id="studentContainer">
+        <div id="studentHeader">
+            <h2>
+                <!-- use placeholders where appropriate -->
+                @Html.EditorFor(model => model.CourseName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Course Name", @style = "max-width:100%" } })
+                @* decrease font-size of validation message in h2 *@
+                @Html.ValidationMessageFor(model => model.CourseName, "", new { @class = "text-danger" })
+            </h2>
+        </div>
+
+        <div id="studentLeft">
+            <p>
+                <strong>
+                    @Html.LabelFor(model => model.CreditHours, htmlAttributes: new { @class = "control-label" }):
+                </strong>
+                <!-- renders <input type="number"> (range attribute in metadata) -->
+                @Html.EditorFor(model => model.CreditHours, new { htmlAttributes = new { @class = "form-control", @placeholder = "#" } })<br />
+                @Html.ValidationMessageFor(model => model.CreditHours, "", new { @class = "text-danger" })
+            </p>
+
+            <p>
+                <strong>
+                    @Html.LabelFor(model => model.Curriculum, htmlAttributes: new { @class = "control-label" }):
+                </strong><br />
+
+                @Html.EditorFor(model => model.Curriculum, new { htmlAttributes = new { @class = "form-control", @style = "max-width:100%;", @placeholder = "Enter Curriculum" } })
+                @Html.ValidationMessageFor(model => model.Curriculum, "", new { @class = "text-danger" })
+            </p>
+
+            <p>
+                <strong>@Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label" }):</strong><br />
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @placeholder = "[-Notes Here-]" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </p>
+        </div>
+
+        <div id="studentRight">
+            <p>
+                <strong>@Html.LabelFor(model => model.CourseDescription, htmlAttributes: new { @class = "control-label" }):</strong><br />
+                @Html.EditorFor(model => model.CourseDescription, new { htmlAttributes = new { @class = "form-control", @placeholder = "Course Description Here", @style = "height: 17.3em" } })
+                @Html.ValidationMessageFor(model => model.CourseDescription, "", new { @class = "text-danger" })
+            </p>
+        </div>
+
+        <!-- clear the prev content float -->
+        <div class="clear"></div>
+
+        <!-- confirm adding a course -->
+        <div id="studentFooterLeft">
+            <input type="submit" value="Add Course" class="btn btn-success" />
+        </div>
+
+        <!-- cancel adding a course -->
+        <div id="studentFooterRight">
+            @if (Session["course"] != null)
+            {
+                <!-- returns you to the course list where you clicked to get here (active/retired) -->
+                @Html.ActionLink("Cancel", Session["course"].ToString(), null, new { @class = "btn btn-danger" })
+            }
+            else
+            {
+                <!-- user accessed this page from somewhere other than active/retired -->
+                @Html.ActionLink("Cancel", "Active", null, new { @class = "btn btn-danger" })
+            }
+        </div>
+
+        <!-- clear the prev content float -->
+        <div class="clear"></div>
+    </div>
+}
+
+@* remember to include a section Scripts for validation *@
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

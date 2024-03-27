@@ -1,0 +1,45 @@
+﻿@model SAT.DATA.EF.ScheduledClass
+
+@{
+    ViewBag.Title = "Status Change";
+}
+
+<div id="formOutline">
+    <h2 class="text-center">@ViewBag.Title | Class Summary</h2>
+    <hr />
+    <div id="studentLeft" style="text-align: right;">
+        <p><strong>@Html.DisplayNameFor(model => model.Courses.CourseName)</strong> @Model.Courses.CourseName</p>
+        <p><strong>@Html.DisplayNameFor(model => model.InstructorName)</strong> @Model.InstructorName</p>
+    </div>
+
+    <div id="studentRight" style="text-align: left;">
+        <!-- ToString("format") to change display of Model info when not using html extension method (metadata not applied)
+    //! example below -->
+        <p><strong>Dates </strong><i>@Model.StartDate.ToString("d")-@Model.EndDate.ToString("d")</i></p>
+        @* //! uncomment to show metadata/formatting for dates (html extensions) *@
+        @*<p><strong>Dates </strong><i>@Html.DisplayFor(model => model.StartDate) to @Html.DisplayFor(model => model.EndDate)</i></p>*@
+        <p><strong>@Html.DisplayNameFor(model => model.Location)</strong> @Model.Location</p>
+    </div>
+
+    <div class="clear"></div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div id="studentHeader">
+            <h3 class="text-center">Change class status to <span class="emphasis">@Session["classStatus"]</span>?</h3>
+        </div>
+        <div class="form-horizontal">
+            <div id="studentfooterLeft">
+                <p class="pull-left">
+                    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-danger" })
+                </p>
+            </div>
+            <div id="studentFooterRight">
+                <input type="submit" value="Update Status" class="btn btn-primary" />
+            </div>
+            <div class="clear"></div>
+        </div>
+    }
+</div>

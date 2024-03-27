@@ -1,0 +1,233 @@
+﻿@model SAT.DATA.EF.Student
+
+@{
+    //update the title
+    ViewBag.Title = "Student Details";
+}
+
+@* Customizing Views
+    1. Determine content to display
+    2. Wireframe a basic HTML structure (in appropriate locations)
+     - * note of any ids/classes that you may add
+    3. Code HTML structure/move content
+    4. Add styles
+*@
+<div id="studentContainer">
+    <div id="studentHeader">
+        <!-- updated to use custom property -->
+        <h2>@Html.DisplayFor(model => model.FullName)</h2>
+    </div>
+    <div id="studentLeft">
+        <!-- display the student image -->
+        <p><img src="~/Content/images/StudentImages/@Model.PhotoUrl" alt="@Model.FullName" /></p>
+        <p>
+            <strong>
+                @Html.DisplayNameFor(model => model.Major):
+            </strong>
+            @Html.DisplayFor(model => model.Major)
+        </p>
+        <p>
+            <strong> @Html.DisplayNameFor(model => model.StudentStatus.SSName):</strong>
+            @Html.DisplayFor(model => model.StudentStatus.SSName)
+        </p>
+    </div>
+    <div id="studentRight">
+        <!-- use a fieldset to organize/group related info (address) -->
+        <fieldset>
+            <!-- legend used to caption the fieldset -->
+            <legend>Address Information</legend>
+            <!--  display full address info if they were provided -->
+            @if (Model.Address != null &&
+            Model.City != null &&
+            Model.State != null &&
+            Model.ZipCode != null)
+            {
+                <p>
+                    @Model.Address<br />
+                    @Model.City, @Model.State &nbsp;&nbsp;@Model.ZipCode
+                </p>
+            }
+            else if (Model.Address == null &&
+                Model.City == null &&
+                Model.State == null &&
+                Model.ZipCode == null)
+            {
+                //no address info, display something else
+                @:[- Not Provided-]
+                //@: is an escape sequence used in Razor blocks to state the code is NOT C#
+                //[- Not Provided -] is just text
+            }
+            else
+            {
+                //address info contains some null values (but not all), display
+                //each piece of info separately
+                <p>
+                    <strong>@Html.DisplayNameFor(model => model.Address):</strong>
+                    @Html.DisplayFor(model => model.Address)
+                </p>
+
+                <p>
+                    <strong>
+                        @Html.DisplayNameFor(model => model.City):
+                    </strong>
+                    @Html.DisplayFor(model => model.City)
+                </p>
+
+                <p>
+                    <strong> @Html.DisplayNameFor(model => model.State):</strong>
+                    @Html.DisplayFor(model => model.State)
+                </p>
+
+                <p>
+                    <strong>
+                        @Html.DisplayNameFor(model => model.ZipCode):
+                    </strong>
+                    @Html.DisplayFor(model => model.ZipCode)
+                </p>
+            }
+        </fieldset>
+
+        <!-- contact info -->
+        <fieldset class="second">
+            <legend>Other Contact</legend>
+            <p>
+                <strong>@Html.DisplayNameFor(model => model.Phone):</strong>
+                @Html.DisplayFor(model => model.Phone)
+            </p>
+            <p>
+                <strong>
+                    @Html.DisplayNameFor(model => model.Email):
+                </strong>
+                @Html.DisplayFor(model => model.Email)
+            </p>
+        </fieldset>
+    </div>
+    <!-- clear the prev content float -->
+    <div class="clear"></div>
+
+    <!-- footer content -->
+    <div id="studentFooterLeft">
+        @Html.ActionLink("Back to Students", "Index")
+    </div>
+
+    <!-- only admin can edit a student -->
+    @if (User.IsInRole("Admin"))
+    {
+        <div id="studentFooterRight">
+            @Html.ActionLink("Edit", "Edit",
+           new { id = Model.StudentId }, new { @class = "btn btn-primary" })
+        </div>
+    }
+
+    <!-- clear the footer content floats -->
+    <div class="clear"></div>
+</div>
+
+@{ 
+    //reference only - default page structure (scaffolding)
+    #region Details (scaffolding)
+
+    /*ViewBag.Title = "Details";
+
+    <h2>Details</h2>
+
+    <div>
+        <h4>Student</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.LastName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Major)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Major)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.City)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.City)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.State)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.State)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ZipCode)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ZipCode)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Phone)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PhotoUrl)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PhotoUrl)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.StudentStatus.SSName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.StudentStatus.SSName)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.StudentId }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>*/
+    #endregion
+}

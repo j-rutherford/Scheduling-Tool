@@ -1,0 +1,348 @@
+﻿/**************************************************************************************/
+/*************************************** GENERAL **************************************/
+/**************************************************************************************/
+.emphasis /* target specific text */
+{
+    font-weight: bold;
+    color: #1E4369;
+}
+
+.underline /* underline specific text */
+{
+    text-decoration: underline;
+}
+
+.text-danger /* override bootstrap for validation messages */
+/* //! added later (Contact Form) */
+{
+    font-size: 15px;
+    font-weight: 700;
+    color: red;
+}
+
+/************************************************************************************/
+/************************************** LAYOUT **************************************/
+/************************************************************************************/
+#sidebar > ul > li > h4 /* top margin to the FIRST h4 (sidebar li) */
+{
+    margin-top: 5em;
+}
+
+/* prevent footer movement (minimal content) */
+div#content /* @RenderBody() div */
+{
+    margin-top: 2em;
+    min-height: 590px;
+    font-size: 1.5em;
+}
+
+/* fix "gap" in side nav */
+div#sidebar li ul /* side nav */
+{
+    margin-bottom: 0;
+}
+
+/* override bootstrap to add gap (Layout header and navbar) */
+#top
+{
+    margin-bottom: 4em;
+}
+
+/* textarea fixed size (prevent resize) */
+textarea
+/* //! added later (Contact Form) */
+{
+    min-height: 10em;
+    /* get rid of the draggable corner (bottom right) */
+    resize: none;
+}
+
+/* center page headers */
+#content > h2
+{
+    text-align: center;
+}
+
+/* increase table text size*/
+table, td, th
+{
+    font-size: 1em;
+}
+
+/**************************************************************************************/
+/**************************************** HOME ****************************************/
+/**************************************************************************************/
+/* Index */
+#welcome h3.emphasis /* ("who can use this app?" text)*/
+{
+    text-align: center;
+    font-style: italic;
+}
+
+#welcome h3 /* roles headers */
+{
+    font-weight: 700;
+}
+
+/* Contact */
+#mailForm /* contact form div */
+{
+    /* allow the element to be centered (shorten width) */
+    width: 75%;
+    /* center the element (not text) */
+    margin: auto;
+    /* add color (same color as nav) */
+    background-color: #1E4369;
+    /* push inputs away from border */
+    padding: 1em;
+    /* round corners */
+    border-radius: .5em;
+    /* shadow offset offset color (body background color) */
+    box-shadow: 5px 5px #D06909;
+    /*change the font color and weight (does NOT affect inputs)*/
+    color: white;
+    font-weight: 700;
+}
+
+    #mailForm .btn
+    {
+        font-weight: 700;
+    }
+
+
+/**************************************************************************************/
+/******************************* STUDENT STATUS (TILES) *******************************/
+/**************************************************************************************/
+/* Index */
+.statusContainerTile
+{
+    width: 30%;
+    /* remember these will stack so margin will double */
+    margin: .5em;
+    /* float elements side by side */
+    float: left;
+    background-color: #D06909;
+    color: white;
+    font-weight: 700;
+    border-radius: .5em;
+    padding: 1em;
+    box-shadow: 5px 5px #1E4369;
+    height: 200px;
+    /* absolute position the footer element at the bottom */
+    position: relative;
+}
+
+.statusHeaderTile
+{
+    text-align: center;
+    margin-bottom: .5em;
+}
+
+    .statusHeaderTile h2
+    {
+        font-size: 1.1em;
+        color: #1E4369;
+        font-weight: 700;
+    }
+
+.statusFooterTile
+{
+    /* position at the container bottom */
+    position: absolute;
+    bottom: .5em; /* .5em from the bottom */
+    right: 3.5em; /* 3.5em from the right */
+    /* cannot use text-align with absolute positioning */
+}
+
+    .statusFooterTile a /* link color */
+    {
+        color: white;
+    }
+
+/* style button link text */
+/* elements that use pull-right/pull-left class (bootstrap) get this */
+.pull-right > a,
+.pull-left > a
+{
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.myWarning /* used on multiple views */
+/* index tiles (student status), active (courses), index (student, student status) */
+{
+    color: red;
+    font-weight: 700;
+    font-style: italic;
+}
+
+/**************************************************************************************/
+/************************************** STUDENTS **************************************/
+/**************************************************************************************/
+/* Details */
+#studentContainer /* student main container */
+{
+    border: 5px solid #1E4369;
+    padding: 1em;
+    width: 95%;
+    margin: auto;
+}
+
+#studentHeader
+{
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+#studentLeft /* student info (left) */
+{
+    float: left;
+    width: 45%;
+}
+
+    #studentLeft img /* student's photo */
+    {
+        max-height: 200px;
+        border: 5px solid orange;
+        border-radius: 50%;
+    }
+
+    #studentLeft p, #studentRight p
+    {
+        margin: 0;
+        padding: 0;
+    }
+
+#studentRight
+{
+    margin-left: 50%; /* push container past #studentLeft */
+}
+
+#studentFooterLeft
+{
+    margin-top: 2em; /* space between footer and main student content */
+    float: left; /* place under student image*/
+    width: 49%; /* limit width (1/2 #studentContainer) */
+}
+
+#studentFooterRight
+{
+    margin-top: 2em;
+    margin-left: 50%;
+    text-align: right;
+}
+
+#studentContainer legend /* student detail headers */
+{
+    background-color: #1E4369;
+    color: white;
+    width: 55%;
+    border-radius: .5em;
+    padding: .5em;
+}
+
+#studentContainer fieldset /* student detail info (groups) */
+{
+    border: 2px solid #1E4369;
+    padding: .5em;
+    border-radius: .5em
+}
+
+.second /* student detail info ("other contact") */
+{
+    margin-top: 1em;
+}
+
+/* Create, Edit */
+#studentContainer input[type="text"], /* student textbox input */
+#studentContainer input[type="email"], /* student email input */
+#studentContainer select /* student drop-down lists (Status) */
+{
+    width: 75%;
+}
+
+#studentContainer label
+{
+    max-width: 100px;
+}
+
+#studentContainer input.form-control /* text input (override bootstrap) */
+{
+    max-width: 30%;
+    display: inline;
+}
+
+h2 input
+{
+    font-weight: 700;
+}
+
+#studentContainer h2 label /* adjust label font */
+{
+    font-size: .75em;
+    max-width: 100%;
+}
+
+#studentContainer select.form-control /* drop-down lists (override bootstrap) */
+{
+    display: inline;
+    width: 73%;
+}
+
+#studentContainer fieldset input.form-control /* fieldset input (override bootstrap) */
+{
+    margin: .25em 0;
+    max-width: 97%;
+}
+
+input[type="file"] /* student image button */
+{
+    margin: .5em 0 1em;
+}
+
+#studentHeader hr /* style horizontal rule */
+{
+    border: 1px solid #E15D05;
+    width: 85%;
+    margin: .5em auto;
+}
+
+#studentFooterLeft a, /* student footer buttons */
+#studentFooterRight input[type=submit]
+{
+    text-decoration: none;
+    font-weight: 700;
+}
+
+    #studentFooterLeft a.btn,
+    #studentFooterRight a.btn,
+    #studentFooterLeft input[type=submit]
+    {
+        font-weight: 700;
+    }
+
+/**************************************************************************************/
+/****************************** CREATE/EDIT FORM VIEWS ********************************/
+/**************************************************************************************/
+#formOutline /* other forms - scheduled classes, enrollments, courses */
+{
+    border: 5px solid #1E4369;
+    padding: 1em;
+    width: 95%;
+    margin: auto;
+}
+
+    #formOutline hr
+    {
+        border: 1px solid #E15D05;
+        width: 85%;
+        margin: .5em auto;
+    }
+
+div#wrapper{
+    width: 1060px;
+}
+div#content.column-left{
+    width: 75rem;
+    
+}

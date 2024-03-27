@@ -1,0 +1,78 @@
+﻿@model SATTP.DATA.EF.Models.Student
+
+@{
+    ViewBag.Title = "Change Student Status";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<h3>
+    @{
+        //SOFT DELETE --status change (lookup table)
+        //this is a "toggle" between the 2 main status options (current, withdrawn)
+        //current students will be withdrawn, withdrawn students will become current
+        //students in other statuses will need to be updated on the Edit
+
+        //dynamic button text
+        //assign text using ifs (used on the submit button)
+        string buttonText = ""; //container for text
+
+        if (Model.SSID == 2) //current student
+        {
+            //update the button text
+            buttonText = "Withdraw Student";
+
+            //verify that the student isn't enrolled in a scheduled class (enrollments table)
+            if (Model.Enrollments.Count == 0) //Count property used to get the # of elements collection (generic)
+            {
+                //prompt the user to confirm
+                <span>Are you sure you want to withrdraw @Model.FullName from the institution?</span>
+            }
+        }
+        else if (Model.SSID == 3) //withdrawn student
+
+        {
+            buttonText = "Re-Sign Student";
+            <span>Are you sure you want to re-sign @Model.FullName to the institution?</span>
+        }
+        else
+        {
+            //handle remaining statuses - prospect, dismissed (former), alumni, booted
+            <span>
+                For more complex student status changes, please
+                <a href="@Url.Action("Edit", new { @id = Model.StudentId })"><strong>edit</strong></a> the student details.
+            </span>
+        }
+    }
+</h3>
+
+@* check student enrollments
+    you cannot withdraw a student who is enrolled in scheduled class
+    give instruction to update enrollments for the student *@
+@if (Model.Enrollments.Count > 0)
+{
+    //student is enrolled in a scheduled class, send to enrollments
+    <h2 class="text-danger">This student is currently enrolled in a scheduled class.</h2>
+    <h3 class="text-center">
+        Please update
+        <a href="@Url.Action("Index","Enrollments")">
+            <strong>enrollments</strong>
+        </a> before proceeding
+    </h3>
+}
+
+@* verify the student status (current or withdrawn) *@
+@if (Model.SSID == 2 || Model.SSID == 3)
+{
+    //display the form
+    using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            @* display dynamic button text *@
+            <input type="submit" value="@buttonText" class="btn btn-success" /> |
+            @Html.ActionLink("Cancel", "Index", new { @class = "btn btn-danger" })
+        </div>
+    }
+}

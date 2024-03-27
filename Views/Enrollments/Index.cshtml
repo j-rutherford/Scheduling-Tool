@@ -1,0 +1,74 @@
+﻿@model IEnumerable<SAT.DATA.EF.Enrollment>
+
+@{
+    //update the title
+    ViewBag.Title = "Enrollments";
+}
+
+@* reuse the title for page header *@
+<h2>@ViewBag.Title</h2>
+
+@* only Scheduling and Admin can create enrollment *@
+@*@if (Request.IsAuthenticated) //checks for log in (would work, but not secure - doesn't check for role)*@
+@if (User.IsInRole("Scheduling") || User.IsInRole("Admin"))
+{
+    <p class="pull-left">
+        @Html.ActionLink("Enroll Student in Class", "Create", "", new { @class = "btn btn-success" })
+    </p>
+}
+
+    <table class="table">
+        <tr>
+            <th>View More</th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnrollmentDate)
+            </th>
+            <!-- use the [Display] for course name (course metadata) -->
+            <th>
+                @Html.DisplayNameFor(model => model.ScheduledClasses.Courses.CourseName)
+            </th>
+            <!-- use the [Display] for full name (student metadata) -->
+            <th>
+                @Html.DisplayNameFor(model => model.Students.FullName)
+            </th>
+            @* only Scheduling and Admin can manage enrollments *@
+            @if (User.IsInRole("Scheduling") || User.IsInRole("Admin"))
+            {
+                <th></th>
+            }
+        </tr>
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @* //! OPTIONAL: find/download image to "view more" *@
+                    <!-- add image to "View More" -->
+                    <a href="@Url.Action("Details", new { @id = item.EnrollmentId })">
+                        <img src="~/Content/images/select.png" width="25" alt="View More" />
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnrollmentDate)
+                </td>
+                <td>
+                    <!-- display course name of the scheduled class -->
+                    @Html.DisplayFor(modelItem => item.ScheduledClasses.Courses.CourseName)
+                </td>
+                <td>
+                    <!-- display full name of the student enrolled -->
+                    @Html.DisplayFor(modelItem => item.Students.FullName)
+                </td>
+                @* only Scheduling and Admin can manage enrollments *@
+                @if (User.IsInRole("Scheduling") || User.IsInRole("Admin"))
+                {
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.EnrollmentId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.EnrollmentId })
+                    </td>
+
+                }
+            </tr>
+        }
+    </table>

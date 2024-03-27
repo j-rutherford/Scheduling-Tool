@@ -1,0 +1,154 @@
+﻿@model SATTP.DATA.EF.Models.Student
+
+@{
+    //update the title
+    ViewBag.Title = "Student Details";
+}
+
+<div id="studentContainer">
+    <div id="studentHeader">
+        <!-- updated to use custom property -->
+        <h2>@Html.DisplayFor(model => model.FullName)</h2>
+    </div>
+    <div id="studentLeft">
+        <!-- display the student image -->
+        <p><img src="~/images/StudentImages/@Model.PhotoUrl" alt="@Model.FullName" /></p>
+        <p>
+            <strong>
+                @Html.DisplayNameFor(model => model.Major):
+            </strong>
+            @Html.DisplayFor(model => model.Major)
+        </p>
+        <p>
+            <strong> @Html.DisplayNameFor(model => model.StudentStatus.SSName):</strong>
+            @Html.DisplayFor(model => model.StudentStatus.SSName)
+        </p>
+    </div>
+    <div id="studentRight">
+        <!-- use a fieldset to organize/group related info (address) -->
+        <fieldset>
+            <!-- legend used to caption the fieldset -->
+            <legend>Address Information</legend>
+            <!--  display full address info if they were provided -->
+            @if (Model.Address != null &&
+            Model.City != null &&
+            Model.State != null &&
+            Model.ZipCode != null)
+            {
+                <p>
+                    @Model.Address<br />
+                    @Model.City, @Model.State &nbsp;&nbsp;@Model.ZipCode
+                </p>
+            }
+            else if (Model.Address == null &&
+            Model.City == null &&
+            Model.State == null &&
+            Model.ZipCode == null)
+            {
+                //no address info, display something else
+                @:[- Not Provided-]
+                //@: is an escape sequence used in Razor blocks to state the code is NOT C#
+                //[- Not Provided -] is just text
+            }
+            else
+            {
+                //address info contains some null values (but not all), display
+                //each piece of info separately
+                <p>
+                    <strong>@Html.DisplayNameFor(model => model.Address):</strong>
+                    @Html.DisplayFor(model => model.Address)
+                </p>
+
+                <p>
+                    <strong>
+                        @Html.DisplayNameFor(model => model.City):
+                    </strong>
+                    @Html.DisplayFor(model => model.City)
+                </p>
+
+                <p>
+                    <strong> @Html.DisplayNameFor(model => model.State):</strong>
+                    @Html.DisplayFor(model => model.State)
+                </p>
+
+                <p>
+                    <strong>
+                        @Html.DisplayNameFor(model => model.ZipCode):
+                    </strong>
+                    @Html.DisplayFor(model => model.ZipCode)
+                </p>
+            }
+        </fieldset>
+
+        <!-- contact info -->
+        <fieldset class="second">
+            <legend>Other Contact</legend>
+            <p>
+                <strong>@Html.DisplayNameFor(model => model.Phone):</strong>
+                @Html.DisplayFor(model => model.Phone)
+            </p>
+            <p>
+                <strong>
+                    @Html.DisplayNameFor(model => model.Email):
+                </strong>
+                @Html.DisplayFor(model => model.Email)
+            </p>
+        </fieldset>
+    </div>
+    <!-- clear the prev content float -->
+    <div class="clear"></div>
+
+    <!-- footer content -->
+    <div id="studentFooterLeft">
+        @Html.ActionLink("Back to Students", "Index")
+    </div>
+
+    <!-- only admin can edit a student -->
+    @if (User.IsInRole("Admin"))
+    {
+        <div id="studentFooterRight">
+            @Html.ActionLink("Edit", "Edit",
+        new { id = Model.StudentId }, new { @class = "btn btn-primary" })
+        </div>
+    }
+
+    <!-- clear the footer content floats -->
+    <div class="clear"></div>
+</div>
+<p align="center">Enrollments</p>
+@if (Model.Enrollments.Any())
+{
+    <table class="table">
+        <tr>
+            <th style="width: 20%;">
+                @Html.DisplayNameFor(model => new SATTP.DATA.EF.Models.ScheduledClass().StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => new SATTP.DATA.EF.Models.Course().CourseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => new SATTP.DATA.EF.Models.ScheduledClass().Location)
+            </th>
+        </tr>
+        @foreach (var item in Model.Enrollments)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ScheduledClass.StartDate)
+                </td>
+                <!-- scheduled class name link to details (clean-up view) -->
+                <td>
+                    @Html.ActionLink(item.ScheduledClass.Course.CourseName, "Details", new { id = item.ScheduledClassID })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ScheduledClass.Location)
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+else
+{
+    <div class="alert alert-warning"><p class="text-center">No enrollments</p></div>
+}

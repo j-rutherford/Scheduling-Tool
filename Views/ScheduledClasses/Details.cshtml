@@ -1,0 +1,40 @@
+﻿@model SAT.DATA.EF.ScheduledClass
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div id="studentContainer">
+    <div id="studentHeader">
+        <h2>
+            @Html.DisplayFor(model => model.Courses.CourseName),
+            @Html.DisplayFor(model => model.StartDate) -
+            @Html.DisplayFor(model => model.EndDate)
+        </h2>
+    </div>
+    <div>
+        <p>
+            <strong>@Html.DisplayNameFor(model => model.Location):</strong>
+            @Html.DisplayFor(model => model.Location)
+        </p>
+        <p>
+            <strong>@Html.DisplayNameFor(model => model.InstructorName):</strong>
+            @Html.DisplayFor(model => model.InstructorName)
+        </p>
+        <p>
+            <strong>Current Status:</strong>
+            @Session["classStatus"]
+        </p>
+    </div>
+    <div id="studentFooterLeft">
+        @Html.ActionLink("Back to Scheduled Classes", "Index")
+    </div>
+    <!-- only scheduling and admin can edit -->
+    @if (User.IsInRole("Scheduling") || User.IsInRole("Admin"))
+    {
+        <div id="studentFooterRight">
+            @Html.ActionLink("Edit", "Edit",
+           new { id = Model.ScheduledClassId }, new {@class="btn btn-primary" })
+        </div>
+    }
+</div>

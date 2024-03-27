@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<h2>S.A.T. - Welcome!</h2>
+
+<div>
+    <p>
+        Welcome to the Scheduled Administration Tool ("S.A.T."). This web application is used to manage Students, Student Statuses, Courses, Scheduled Classes, and Enrollments. Depending on your Identity role, you may be able to view, create, update, or remove these items.<br />
+        This application uses:
+        <ul>
+            <li>HTML and CSS for structure and style</li>
+            <li>Javascript for front-end logic</li>
+            <li>MS (Microsoft) SQL Server data structure to manage and persist the data</li>
+            <li>Identity Framework to manage Users/Roles</li>
+            <li>Model-View-Controller (MVC) design pattern architecture to manage the building of the site</li>
+        </ul>
+    </p>
+
+    <hr />
+
+    <!-- added id (custom css) -->
+    <div id="welcome">
+        <!-- added class (custom css) -->
+        <h3 class="emphasis">Who Can Use This Application?</h3>
+        <h3>The following roles will be used in this application:</h3>
+        <ul>
+            <li>Scheduling</li>
+            <li>Admin (Administrators)</li>
+        </ul>
+        <h3><i class="emphasis">Anonymous</i> (unauthenticated) users will be able to view the following information:</h3>
+        <ul>
+            <li>Base Pages (home, contact)</li>
+        </ul>
+        <h3>Users with the role of <i class="emphasis">Scheduling</i> will be able to view the following information:</h3>
+        <ul>
+            <li>Base Pages (home, contact)</li>
+            <li>Students (index, details)</li>
+            <li>Current Scheduled Classes (NO delete)</li>
+            <li>Enrollments (FULL CRUD)</li>
+        </ul>
+        <h3>Users with the role of <i class="emphasis">Administrator</i> will be able to view the following information:</h3>
+        <ul>
+            <li>Base Pages (home, contact)</li>
+            <li>Courses (FULL CRUD)</li>
+            <li>Student Statuses  (FULL CRUD)</li>
+            <li>Enrollments (FULL CRUD)</li>
+            <li>Scheduled Classes (FULL CRUD)</li>
+            <li>Students (FULL CRUD)</li>
+        </ul>
+    </div>
+</div>

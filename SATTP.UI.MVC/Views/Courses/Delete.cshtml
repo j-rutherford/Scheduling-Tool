@@ -1,0 +1,23 @@
+﻿@model SATTP.DATA.EF.Models.Course
+
+@{
+    //ternary operator to display correct text
+    ViewBag.Title = Model.IsActive ? "Retire" : "Activate" + " this course.";
+}
+
+@* customize any page header *@
+<h3>Are you sure you want to @(Model.IsActive ? "retire" : "activate") <strong><i>@Model.CourseName</i></strong>?</h3>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        @* change button text values *@
+        <input type="submit" value="Yes" class="btn btn-primary" /> |
+        @* //! added later (session) *@
+        @* use session to return to appropriate view (active/retired) *@
+@*         @Html.ActionLink("No", Session["course"].ToString(), null, new { @class = "btn btn-danger" })
+ *@    </div>
+}

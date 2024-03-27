@@ -1,0 +1,170 @@
+﻿<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>@ViewBag.Title | S.A.T.</title>
+    @Styles.Render("~/Content/css")
+
+    <!-- template stylesheet -->
+    @*<link rel="stylesheet" type="text/css" href="~/Content/styles.css" />*@ <!-- moved to BundleConfig -->
+    
+    <!-- //! added later (jQueryUI datepicker) -->
+    <!-- datepicker styles -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+    <!-- //! added later (DataTables.net) -->
+    <!-- section where page calls to css will drop in -->
+    @RenderSection("css", false)
+</head>
+<body>
+    <div id="wrapper">
+        <div id="top" class="clear">
+            <h1><a href="@Url.Action("Index","Home")">S.A.T.</a></h1>
+            <h2>The Scheduling Administration Tool</h2>
+        </div>
+        <div id="nav" class="clear">
+            <div class="ul">
+                <ul>
+                    <!-- highlighted nav (jQuery) -->
+                    <li @*class="selected"*@><a href="@Url.Action("Index","Home")">home</a></li>
+                    @*<li><a href="@Url.Action("About","Home")">About Us</a></li>*@
+                    
+                    <!-- //! added later (secure site nav/identity) -->
+                    @if (Request.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Scheduling") || User.IsInRole("Admin"))
+                        //if (Request.IsAuthenticated) -- works fine for this example (only 2 roles - Scheduling/Admin)
+                        {
+                            <li><a href="@Url.Action("Index","Students")">Students</a></li>
+                            <li><a href="@Url.Action("Index","ScheduledClasses")">Scheduled Classes</a></li>
+                            <li><a href="@Url.Action("Index","Enrollments")">Enrollments</a></li>
+                        }
+                        <!-- //! added later (secure site nav/identity) -->
+                        if (User.IsInRole("Admin"))
+                        {
+                            <li><a href="@Url.Action("Index","StudentStatus")">Student Statuses</a></li>
+                            <li><a href="@Url.Action("Active","Courses")">Courses</a></li>
+                        }
+                    }
+                    <li><a href="@Url.Action("Contact","Home")">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="body" class="clear">
+            <div id="sidebar" class="column-right">
+                <ul>
+                    <li>
+                        <h4>Members Area</h4>
+                        <!-- from original _Layout -->
+                        @Html.Partial("_LoginPartial")
+                        <ul>
+                            <!-- from original _Layout -->
+                            @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                            {
+                                <li>@Html.ActionLink("Roles", "Index", "RolesAdmin")</li>
+                                <li>@Html.ActionLink("Users", "Index", "UsersAdmin")</li>
+                            }
+                        </ul>
+
+                    </li>
+
+                    @* not essential to requirements
+                        <li>
+                            <h4>Categories</h4>
+                            <ul>
+                                <li><a href="#">Lorem ipsum dolor sit amet.</a></li>
+                                <li><a href="#">Quisque consequat nunc a felis.</a></li>
+                                <li><a href="#">Suspendisse consequat magna at.</a></li>
+                                <li><a href="#">Etiam eget diam id ligula rhoncus.</a></li>
+                                <li><a href="#">Sed in mauris non nibh.</a></li>
+                            </ul>
+                        </li>*@
+                </ul>
+            </div>
+            <div id="content" class="column-left">
+                <!-- from original _Layout -->
+                @RenderBody()
+            </div>
+        </div>
+        <div id="footer">
+            <p class="footer-links">
+                &copy; @DateTime.Now.Year SAT. Design by <a target="_blank" href="http://www.spyka.net">Centriq Training</a> and
+                Converted to MVC by <a target="_blank" href="http://www.justfreetemplates.com">Centriq Training</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- default scripts (MVC original layout) -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <!-- //! added later (jQueryUI Datepicker) -->
+    <!-- added scripts -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- from original _Layout -->
+    <!-- section where page calls to scripts will drop in -->
+    @RenderSection("scripts", required: false)
+
+    <!-- add selected class to correct navigation -->
+    <script>
+        $(function () {
+            //Location of the orignal "selected class" in the navigation
+            //loop through all of the li elements in the nav div (# because it is an ID)
+            $('#nav li').each(function () {
+                //Process to get the controller name from our href
+                //get the href value hold it in a variable
+                var fullAnchor = $(this).find('a').attr('href');
+
+                //split() the values by the '/' (gives a collection)
+                var aController = fullAnchor.split('/');
+
+                //use the console to check the value at the index of 1 in the collection
+                //console.log('aController[1]: ' + aController[1]);
+
+                //get the full context of the URL(including any querystring)
+                //substring to remove everything before the path (mysite.com/home/index -
+                //would return home/index)
+                var fullPath = (window.location.pathname + location.search).substr(1);
+
+                //break up the string by the '/'
+                var pController = fullPath.split('/');
+                //check the value - in the console these should be equal for the proper link
+                //console.log('pController[0]: ' + pController[0]);
+                //console.log('------------');
+                //console.log(window.location.pathname)
+                //console.log(fullAnchor)
+                if (aController[1] == pController[0]) {
+                    //locate the anchor tag INSIDE the li compare its href attribute to
+                    //the current browser
+                    //location - if they match
+                    $(this).addClass('selected');
+                    //add the class from CSS highlight it.
+                    //Whatever the class is named in css.
+                    console.log('add selected');
+
+                }
+                //lastly resolve logic issue, without this logic all links that have Home
+                //as the controller (except home/index) will be illuminated
+
+                //Case sensitive, check all links to make sure Home is cased appropriately
+                //If the controller is home but the path doesnt match the ENTIRE anchor
+                if (aController[1] == 'Home' && window.location.pathname != fullAnchor) {
+                    //Remove the class.
+                    $(this).removeClass('selected');
+                    //console.log('remove selected');
+                }
+                //console.log('if number 2');
+                //console.log('aController[1] (home): ' + aController[1]);
+                //console.log('wlp: '+ window.location.pathname);
+                //console.log('anchor: '+ fullAnchor);
+                //console.log('------------');
+
+            });
+        });
+    </script>
+
+</body>
+</html>

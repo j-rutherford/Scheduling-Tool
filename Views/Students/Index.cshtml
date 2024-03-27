@@ -1,0 +1,156 @@
+﻿@model IEnumerable<SAT.DATA.EF.Student>
+
+@{
+    ViewBag.Title = "Students";
+}
+
+<!-- reuse the ViewBag.Title for the page header -->
+<h2>@ViewBag.Title</h2>
+
+<!-- only Admin can add a new Student -->
+@if (User.IsInRole("Admin"))
+{
+    <p class="pull-left">
+        @Html.ActionLink("Add New Student", "Create", "", new { @class = "btn btn-success" })
+    </p>
+}
+
+@* clean up the table display --add DataTables.net *@
+<!-- add id="studentsTable" to reference table -->
+<table class="table" id="studentsTable">
+    <!-- add <thead> to use DataTables.net -->
+    <thead>
+        <tr>
+            @* combine first name and last name into a single value that
+                we can use throughout the app
+                * used for drop-down lists (Enrollments) *@
+            @*<th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>*@
+            <th>
+                <!-- updated to use custom property (StudentMetadata) -->
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Major)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Address)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.City)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.State)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ZipCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.PhotoUrl)
+                </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.StudentStatus.SSName)
+            </th>
+            @if (User.IsInRole("Admin"))
+            {
+                <!-- only display for Admin (Edit/Delete) -->
+                <th></th>
+            }
+        </tr>
+    </thead>
+
+    <!-- add <tbody> to use DataTables.net -->
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>*@
+                <td>
+                    <!-- updated to use custom property (link to Details) -->
+                    @Html.ActionLink(item.FullName, "Details", new { id = item.StudentId })
+                    @*@Html.DisplayFor(modelItem => item.FullName)*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Major)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.State)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ZipCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.PhotoUrl)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentStatus.SSName)
+                </td>
+                @* only Admin can edit or delete a student *@
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.StudentId }) |
+                        @*@Html.ActionLink("Details", "Details", new { id = item.StudentId }) |*@
+                        @*@Html.ActionLink("Delete", "Delete", new { id = item.StudentId })*@
+
+                        @* //! soft-delete *@
+                        @* ONLY remove a student if they are not currently enrolled in any scheduled classes *@
+                        @if (item.Enrollments.Count < 1)
+                        {
+                            @Html.ActionLink("Delete", "Delete", new { id = item.StudentId })
+                        }
+                        else
+                        {
+                            <!-- if the student is currently enrolled in any scheduled classes, they CANNOT be removed -->
+                            <span class="myWarning">In Use</span>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- DataTables.net script reference -->
+@section scripts {
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#studentsTable').DataTable(); //reference id added to the table
+        });
+    </script>
+}
+
+<!-- DataTables.net css reference -->
+@section css {
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+}
+@* //! add a RenderSection() for css on the _Layout *@

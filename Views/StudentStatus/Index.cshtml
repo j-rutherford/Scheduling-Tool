@@ -1,0 +1,56 @@
+﻿@model IEnumerable<SAT.DATA.EF.StudentStatus>
+
+@{
+    ViewBag.Title = "Student Statuses (Table View)";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <p class="pull-left">
+        @Html.ActionLink("Add Status", "Create", null, new { @class = "btn btn-primary" })
+    </p>
+    <!-- add a link for the tile view -->
+    <p class="pull-right">@Html.ActionLink("Tile View", "IndexTiles")</p>
+    <div class="clearfix"></div>
+</div>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SSName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SSDescription)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+
+                @Html.DisplayFor(modelItem => item.SSName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SSDescription)
+            </td>
+            @*fix the width of the last column forcing the others to resize,
+                keeps my text in this td on one line*@
+            <td style="width:100px">
+                @Html.ActionLink("Edit", "Edit", new { id = item.SSID }) |
+                <!-- //! added later -->
+                <!-- prevent a student status from being deleted if there are students using that status -->
+                @if (item.Students.Count < 1)
+                {
+                    @Html.ActionLink("Delete", "Delete", new { id = item.SSID })
+                }
+                else
+                {
+                    <span class="myWarning">In Use</span>
+                }
+            </td>
+        </tr>
+    }
+
+</table>

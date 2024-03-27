@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SATTP.UI.MVC</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/css/styles.css" rel="stylesheet" />
+    <link href="~/css/customstyles.css" rel="stylesheet" />
+    @RenderSection("css",false);
+</head>
+<body>
+    <div id="wrapper">
+        <div id="top" class="clear">
+            <h1><a href="@Url.Action("Index","Home")">S.A.T.</a></h1>
+            <h2>The Scheduling Administration Tool</h2>
+        </div>
+        <div id="nav" class="clear">
+            <div class="ul">
+                <ul>
+
+                    <li><a href="@Url.Action("Index","Home")">home</a></li>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <partial name="_SchedulingMenu" />
+                    }
+                    <li><a href="@Url.Action("Contact","Home")">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="body" class="clear">
+            <div id="sidebar" class="column-right">
+                <ul>
+                    <li>
+                        <h4>Members Area</h4>
+                        <!-- from original _Layout -->
+                        <partial name="_LoginPartial" />
+
+
+                    </li>
+
+
+                </ul>
+            </div>
+            <div id="content" class="column-left">
+                <!-- from original _Layout -->
+                @RenderBody()
+            </div>
+        </div>
+        <div id="footer">
+            <p class="footer-links">
+                &copy; @DateTime.Now.Year SAT. Design by <a target="_blank" href="http://www.spyka.net">Centriq Training</a> and
+                Converted to MVC by <a target="_blank" href="http://www.justfreetemplates.com">Centriq Training</a>
+            </p>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
