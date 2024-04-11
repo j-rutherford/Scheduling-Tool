@@ -4,4 +4,6 @@ This version has been converted from .NET Framework to .NET 6.0, utilizes Identi
 
 Utilize the included .sql script to generate a database with some sample data to test. Script is at ./SATTP.UI.MVC/Data/sat_script.sql
 
+Administrator login should be "admin@sat.com" and "P@ssw0rd"
+
 This application serves as an internal solution for fictional university staff to manage course offerings, scheduled classes, and student enrollments.
